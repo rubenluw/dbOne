@@ -1,0 +1,250 @@
+create extension if not exists pgcrypto;
+
+-- /*
+drop table data_messages;
+drop table messages;
+drop table users_information;
+-- */
+drop table users;
+
+
+create table users(
+  id_user serial,
+  login varchar(50) not null,
+  password varchar(100) not null,
+
+  primary key(id_user),
+  unique(login),
+  check(char_length(login)>=3),
+  check(char_length(password)>0)
+
+);
+
+
+
+/*
+\d users
+
+alter table users
+  add password_second varchar(100);
+\d users
+
+alter table users
+  alter column password_second set not null;
+\d users
+
+alter table users
+  alter column password_second drop not null;
+\d users
+
+alter table users
+  add constraint check_password_second check(char_length(password_second)>0);
+\d users
+
+alter table users
+  drop constraint check_password_second;
+\d users
+
+alter table users
+  drop column password_second;
+\d users
+
+*/
+
+/*
+insert into users (login,password) values 
+  ('mike_second',digest('qwerty_second','sha256'));
+select * from users;
+update users
+  set login='mike_third'
+where id_user=1;
+select * from users;
+delete from users
+where id_user=1;
+select * from users;
+*/
+
+ -- /*
+
+create table users_information(
+  id_user serial,
+  name varchar(50) not null,
+  surname varchar(50) not null default 'none',
+  age integer not null default 0,
+  color_scheme varchar(10) not null default 'light',
+
+  primary key(id_user),
+  foreign key (id_user) references users(id_user),
+  check(char_length(name)>0)
+);
+
+create table messages(
+  id_message serial,
+  id_sender integer,
+  id_recipient integer,
+  date_message date not null,
+  time_message time not null,
+
+  primary key(id_message),
+  foreign key (id_sender) references users(id_user),
+  foreign key (id_recipient) references users(id_user)
+);
+
+create table data_messages(
+  id_data serial,
+  id_message integer,
+  text_message text not null default 'none',
+  voice_message text not null default 'none',
+  photo_message text not null default 'none',
+  file_message text not null default 'none',
+
+  primary key(id_data),
+  foreign key(id_message) references messages(id_message)
+);
+
+
+
+
+insert into users (login,password) values 
+  ('mike',digest('qwerty','sha256')),
+  ('bob',digest('lapmmm','sha256')),
+  ('rayan',digest('rettlop','sha256')),
+  ('andrew',digest('nbi86Unn??@wq','sha256')),
+  ('lera',digest('dfkNemcpwKKKKewwe','sha256'));
+
+insert into users_information (name,surname,age,color_scheme) values
+  ('mike','jonson',20,'light'),
+  ('bob','lampada',22,'dark'),
+  ('rayan','milson',19,'dark'),
+  ('adrew','sanclidiav',20,'light'),
+  ('lera','olaeva',21,'dark');
+
+insert into messages(id_sender,id_recipient,date_message,time_message) values
+  (1,2,'2025-01-10','10:10:05'),
+  (1,3,'2025-01-10','04:34:01'),
+  (1,4,'2025-01-11','13:17:45'),
+  (1,5,'2025-02-11','23:11:59'),
+  (2,1,'2025-01-11','10:10:05'),
+  (2,3,'2025-01-12','12:13:05'),
+  (2,4,'2025-01-10','15:05:23'),
+  (2,5,'2025-01-12','01:01:35'),
+  (3,1,'2025-01-16','08:43:34'),
+  (3,2,'2025-01-22','23:12:06'),
+  (3,4,'2025-01-23','12:13:09'),
+  (3,5,'2025-01-25','14:18:13'),
+  (4,1,'2025-01-25','09:33:54'),
+  (4,2,'2025-02-04','03:53:43'),
+  (4,3,'2025-01-06','07:04:23'),
+  (4,5,'2025-01-10','17:08:11'),
+  (5,1,'2025-01-12','19:32:32'),
+  (5,2,'2025-01-12','11:43:39'),
+  (5,3,'2025-01-13','14:23:28'),
+  (5,4,'2025-03-24','07:55:37');
+
+
+insert into data_messages (id_message,text_message,voice_message,photo_message,file_message) values
+  (1,'hello bob',default,'mike/2/1.jpg',default),
+  (1,default,default,'mike/2/2.jpg',default),
+  (1,default,default,'mike/2/3.jpg',default),
+  (1,default,default,'mike/2/4.jpg',default),
+  (2,'hello rayan',default,'mike/3/1.jpg',default),
+  (2,default,default,'mike/3/2.jpg',default),
+  (2,default,default,'mike/3/3.jpg',default),
+  (2,default,default,'mike/3/4.jpg',default),
+  (3,'hello adrew',default,'mike/4/1.jpg',default),
+  (3,default,default,'mike/4/2.jpg',default),
+  (3,default,default,'mike/4/3.jpg',default),
+  (3,default,default,'mike/4/4.jpg',default),
+  (4,'hello lera',default,default,'mike/5/1.zip'),
+  (4,default,default,default,'mike/5/2.zip'),
+  (4,default,default,default,'mike/5/3.zip'),
+  (4,default,default,default,'mike/5/4.zip'),
+  (5,'mike, thank you',default,'bob/1/1.jpg',default),
+  (5,default,default,'bob/1/2.jpg',default),
+  (5,default,default,'bob/1/3.jpg',default),
+  (5,default,default,'bob/1/4.jpg',default),
+
+  (6,'hello rayan',default,default,default),
+  (7,default,'bob/4/1.mp4',default,default),
+  (8,'hello lera,how are you?',default,default,default),
+  (9,'hello mike,from rayan',default,default,default),
+  (10,'hello bob',default,default,default),
+  (11,'hello adrew',default,default,default),
+  (12,'hello lera',default,default,default),
+  (13,'hello mike, from adrew',default,default,default),
+  (14,'hello bob, from adrew',default,default,default),
+  (15,'hello rayan, from adrew',default,default,default),
+  (16,'hello lera, from adrew',default,default,default),
+  (17,'hello mike, from lera',default,default,default),
+  (18,'hello bob, from lera',default,default,default),
+  (19,'hello rayan, from lera',default,default,default),
+  (20,'hello adrew, from lera',default,default,default);
+
+
+
+
+\echo 'TABLE USERS'
+select * from users;
+\echo 'TABLE USERS_INFORMATION'
+select * from users_information;
+\echo 'TABLE MESSAGES'
+select * from messages;
+\echo 'TABLE DATA_MESSAGES'
+select * from data_messages;
+
+
+
+ -- */
+
+
+/*
+
+select name, age 
+from users_information
+where age=20;
+
+select text_message
+from data_messages
+where (
+  (select login 
+  from users
+  where id_user=
+    (select id_sender
+    from messages
+    where messages.id_message=data_messages.id_message)
+  )='mike'
+  and (text_message!='none')
+);
+
+select login
+from users
+where '2025-01-11' IN (
+  select date_message
+  from messages
+  where id_sender=users.id_user
+);
+
+select login
+from users
+where(
+  (
+    (
+    select count(time_message)
+    from messages
+    where (id_sender=users.id_user) and (time_message between '08:00:00' and '10:00:00') 
+    )>0
+  )
+  and
+  (
+    (
+    select color_scheme
+    from users_information
+    where users_information.id_user=users.id_user
+    )='dark'
+  )
+
+);
+
+
+*/
+
