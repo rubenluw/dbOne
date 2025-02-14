@@ -10,15 +10,45 @@
 
 Краткое описание таблиц:
 
-- 1) *Users (id_user, login, password)* - информация о логине, пароле и id пользователя
-- 2) Users_information (id_user, name, surname, age, color_scheme) - информация о имени, фамилии возрасте, цветовой схеме интерфейса
-- 3) Messages (id_message, id_sender, id_recipient, date_message, time_message) - информация о сообщениях, id сообщения, от кого, кому, дата сообщения и время
-- 4) Data_messages (id_data, id_message, text_message, voice_message, photo_message, file_message) - данные о сообщениях, хранит идентификатор сообщения, к которому принадлежат данные, текст сообщения, путь до голосового файла сообщения, путь до фото, путь до файла
+- 1\) *Users (id_user, login, password)* - информация о логине, пароле и id пользователя
+- 2\) *Users_information (id_user, name, surname, age, color_scheme)* - информация о имени, фамилии, возрасте, цветовой схеме интерфейса
+- 3\) *Messages (id_message, id_sender, id_recipient, date_message, time_message)* - информация о сообщениях, id сообщения, от кого, кому, дата сообщения и время
+- 4\) *Data_messages (id_data, id_message, text_message, voice_message, photo_message, file_message)* - данные о сообщениях, хранит идентификатор сообщения, к которому принадлежат данные, текст сообщения, путь до голосового файла сообщения, путь до фото, путь до файла
 
 Схема базы данных:
 <!-- схема -->
 
-### 1) Таблица Users
-
+### 1) Таблица Users:
 #### Users (id_user, login, password) - информация о логине, пароле и id пользователя
 
+id_user - идентификатор пользователя, первичный ключ
+login - логин пользователя,символьное меньше 50, уникальное, длина больше 3, not null
+password - хэш пароля(sha256) пользователя, символьное меньше 100, длина больше 0, not null
+
+### 2) Таблица Users_information:
+#### Users_information (id_user, name, surname, age, color_scheme) - информация о имени, фамилии, возрасте, цветовой схеме интерфейса
+
+id_user - идентификатор пользователя, первичный ключ, внешний ключ к таблице Users стобцу id_user
+name - имя пользователя,символьное меньше 50, длина больше 0, not null
+surname - фамилия пользователя,символьное меньше 50, значение по умолчанию 'none', not null
+age - возраст пользователя,целое число, значение по умолчанию 0, not null
+color_scheme - цветовая схема интерфейса пользователя,символьное меньше 10, значение по умолчанию 'light', not null
+
+### 3) Таблица Messages:
+#### Messages (id_message, id_sender, id_recipient, date_message, time_message) - информация о сообщениях, id сообщения, от кого, кому, дата сообщения и время
+
+id_message - идентификатор сообщения, первичный ключ
+id_sender - идентификатор отправителя, целое, внешний ключ к таблице Users стобцу id_user
+id_recipient - идентификатор получателя, целое, внешний ключ к таблице Users стобцу id_user
+data_message - дата сообщения,тип дата, not null
+time_message - время сообщения,тип время, not null
+
+### 4) Таблица Data_messages:
+#### Data_messages (id_data, id_message, text_message, voice_message, photo_message, file_message) - данные о сообщениях, хранит идентификатор сообщения, к которому принадлежат данные, текст сообщения, путь до голосового файла сообщения, путь до фото, путь до файла
+
+id_data - идентификатор пакета данных, первичный ключ
+id_message - идентификатор сообщения, целое, внешний ключ к таблице Messages стобцу id_message
+text_message - текст сообщения, текстовое, значение по умолчанию 'none', not null
+voice_message - путь до голосового сообщения, текстовое, значение по умолчанию 'none', not null
+photo_message - путь до фото, текстовое, значение по умолчанию 'none', not null
+file_message - путь до файла, текстовое, значение по умолчанию 'none', not null
