@@ -70,6 +70,7 @@ file\_message - путь до файла, текстовое, значение �
 ## Задание 1.
 
 1\.1\. Создадим необходимые таблицы:
+
 - Таблица Users:
 ```sql
 create table users(
@@ -83,3 +84,67 @@ create table users(
   check(char_length(password)>0)
 );
 ```
+- Таблица Users\_information:
+```sql
+create table users_information(
+  id_user serial,
+  name varchar(50) not null,
+  surname varchar(50) not null default 'none',
+  age integer not null default 0,
+  color_scheme varchar(10) not null default 'light',
+
+  primary key(id_user),
+  foreign key (id_user) references users(id_user),
+  check(char_length(name)>0)
+);
+```
+- Таблица Messages:
+```sql
+create table messages(
+  id_message serial,
+  id_sender integer,
+  id_recipient integer,
+  date_message date not null,
+  time_message time not null,
+
+  primary key(id_message),
+  foreign key (id_sender) references users(id_user),
+  foreign key (id_recipient) references users(id_user)
+);
+```
+- Таблица Data\_messages:
+```sql
+create table data_messages(
+  id_data serial,
+  id_message integer,
+  text_message text not null default 'none',
+  voice_message text not null default 'none',
+  photo_message text not null default 'none',
+  file_message text not null default 'none',
+
+  primary key(id_data),
+  foreign key(id_message) references messages(id_message)
+);
+```
+
+- Результат создания таблицы Users:<br/>
+![5.png](images/5.png)
+
+- Результат создания таблицы Users\_information:<br/>
+![6.png](images/6.png)
+
+- Результат создания таблицы Messages:<br/>
+![7.png](images/7.png)
+
+- Результат создания таблицы Data\_messages:<br/>
+![8.png](images/8.png)
+
+
+1\.2\. Команды изменения и удаления:
+
+- Добавить столбец в таблицу:
+```sql
+alter table users
+  add password_second varchar(100);
+```
+
