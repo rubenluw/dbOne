@@ -55,6 +55,31 @@ file\_message - путь до файла, текстовое, значение �
 
 
 ### 1) Таблица Users:
-![1.png](1.png)
+![1.png](images/1.png)
 
 ### 2) Таблица Users\_information:
+![2.png](images/2.png)
+
+### 3) Таблица Messages:
+![3.png](images/3.png)
+
+### 4) Таблица Data\_messages:
+![4.png](images/4.png)
+
+
+## Задание 1.
+
+1\.1\. Создадим необходимые таблицы:
+- Таблица Users:
+```sql
+create table users(
+  id_user serial,
+  login varchar(50) not null,
+  password varchar(100) not null,
+  
+  primary key(id_user),
+  unique(login),
+  check(char_length(login)>=3),
+  check(char_length(password)>0)
+);
+```
