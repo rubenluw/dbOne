@@ -1,6 +1,12 @@
 create extension if not exists pgcrypto;
 
 -- /*
+
+/*
+drop view view_one;
+drop view view_two;
+*/
+
 drop table data_messages;
 drop table messages;
 drop table users_information;
@@ -197,6 +203,8 @@ select * from data_messages;
 
 
 
+
+
 /*
 
 select name, age 
@@ -248,3 +256,31 @@ where(
 
  */
 
+
+-- drop view view_one;
+-- drop view view_two;
+
+/*
+
+create view view_one as
+  select login,name,surname
+  from users,users_information
+  where users.id_user=users_information.id_user;
+
+create view view_two as
+  select login,name,surname,text_message,date_message,time_message
+  from users,users_information,messages,data_messages
+  where
+    users_information.id_user=users.id_user
+    and messages.id_sender=users.id_user
+    and data_messages.id_message=messages.id_message
+    and data_messages.text_message!='none'
+  ;
+
+
+\echo 'VIEW VIEW_ONE'
+select * from view_one;
+\echo 'VIEW VIEW_TWO'
+select * from view_two;
+
+*/

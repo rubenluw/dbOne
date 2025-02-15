@@ -15,7 +15,7 @@
 - 3\) *Messages (id\_message, id\_sender, id\_recipient, date\_message, time\_message)* - информация о сообщениях, id сообщения, от кого, кому, дата сообщения и время
 - 4\) *Data\_messages (id\_data, id\_message, text\_message, voice\_message, photo\_message, file\_message)* - данные о сообщениях, хранит идентификатор сообщения, к которому принадлежат данные, текст сообщения, путь до голосового файла сообщения, путь до фото, путь до файла
 
-Схема базы данных:
+Схема базы данных,таблицы приведены к 3 нормальной форме:
 ![13.png](images/13.png)
 
 ### 1) Таблица Users:
@@ -401,3 +401,40 @@ where(
 ![12.png](images/12.png)
 
 
+## Задание 4.
+
+4\.1\. Напишем запрос для создания представления основной таблицы и одной подчиненной:
+
+>Написать sql-запрос для создания представления, содержащего данные из основной
+таблицы (несколько полей) и одной из подчиненных таблиц (несколько полей).
+
+```sql
+create view view_one as
+  select login,name,surname
+  from users,users_information
+  where users.id_user=users_information.id_user;
+```
+
+Выполнение представления:<br/>
+![14.png](images/14.png)
+
+4\.2\. Напишем запрос для создания представления основной таблицы и нескольких подчиненных:
+
+>Написать sql-запрос для создания представления, содержащего данные из основной
+таблицы (несколько полей) и некоторых данных из всех подчиненных таблиц (можно 1-2
+поля).
+
+```sql
+create view view_two as
+  select login,name,surname,text_message,date_message,time_message
+  from users,users_information,messages,data_messages
+  where
+    users_information.id_user=users.id_user
+    and messages.id_sender=users.id_user
+    and data_messages.id_message=messages.id_message
+    and data_messages.text_message!='none'
+  ;
+```
+
+Выполнение представления:<br/>
+![15.png](images/15.png)
