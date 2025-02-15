@@ -148,3 +148,225 @@ alter table users
   add password_second varchar(100);
 ```
 
+- Добавить ограничение столбца:
+```sql
+alter table users
+  alter column password_second set not null;
+```
+
+-Удалить ограничение столбца:
+```sql
+alter table users
+  alter column password_second drop not null;
+```
+
+- Добавить ограничения таблицы:
+```sql
+alter table users
+  add constraint check_password_second check(char_length(password_second)>0);
+```
+
+- Удалить ограничения таблицы:
+```sql
+alter table users
+  drop constraint check_password_second;
+```
+
+- Удалить столбец из таблицы:
+```sql
+alter table users
+  drop column password_second;
+```
+
+## Задание 2.
+
+2\.1\. Заполним таблицы данными:
+
+- Таблица Users:
+```sql
+insert into users (login,password) values 
+  ('mike',digest('qwerty','sha256')),
+  ('bob',digest('lapmmm','sha256')),
+  ('rayan',digest('rettlop','sha256')),
+  ('andrew',digest('nbi86Unn??@wq','sha256')),
+  ('lera',digest('dfkNemcpwKKKKewwe','sha256'));
+```
+
+- Таблица Users\_information:
+```sql
+insert into users_information (name,surname,age,color_scheme) values
+  ('mike','jonson',20,'light'),
+  ('bob','lampada',22,'dark'),
+  ('rayan','milson',19,'dark'),
+  ('adrew','sanclidiav',20,'light'),
+  ('lera','olaeva',21,'dark');
+```
+
+- Таблица Messages:
+```sql
+insert into messages(id_sender,id_recipient,date_message,time_message) values
+  (1,2,'2025-01-10','10:10:05'),
+  (1,3,'2025-01-10','04:34:01'),
+  (1,4,'2025-01-11','13:17:45'),
+  (1,5,'2025-02-11','23:11:59'),
+  (2,1,'2025-01-11','10:10:05'),
+  (2,3,'2025-01-12','12:13:05'),
+  (2,4,'2025-01-10','15:05:23'),
+  (2,5,'2025-01-12','01:01:35'),
+  (3,1,'2025-01-16','08:43:34'),
+  (3,2,'2025-01-22','23:12:06'),
+  (3,4,'2025-01-23','12:13:09'),
+  (3,5,'2025-01-25','14:18:13'),
+  (4,1,'2025-01-25','09:33:54'),
+  (4,2,'2025-02-04','03:53:43'),
+  (4,3,'2025-01-06','07:04:23'),
+  (4,5,'2025-01-10','17:08:11'),
+  (5,1,'2025-01-12','19:32:32'),
+  (5,2,'2025-01-12','11:43:39'),
+  (5,3,'2025-01-13','14:23:28'),
+  (5,4,'2025-03-24','07:55:37');
+```
+
+- Таблица Data\_messages:
+```sql
+insert into data_messages (id_message,text_message,voice_message,photo_message,file_message) values
+  (1,'hello bob',default,'mike/2/1.jpg',default),
+  (1,default,default,'mike/2/2.jpg',default),
+  (1,default,default,'mike/2/3.jpg',default),
+  (1,default,default,'mike/2/4.jpg',default),
+  (2,'hello rayan',default,'mike/3/1.jpg',default),
+  (2,default,default,'mike/3/2.jpg',default),
+  (2,default,default,'mike/3/3.jpg',default),
+  (2,default,default,'mike/3/4.jpg',default),
+  (3,'hello adrew',default,'mike/4/1.jpg',default),
+  (3,default,default,'mike/4/2.jpg',default),
+  (3,default,default,'mike/4/3.jpg',default),
+  (3,default,default,'mike/4/4.jpg',default),
+  (4,'hello lera',default,default,'mike/5/1.zip'),
+  (4,default,default,default,'mike/5/2.zip'),
+  (4,default,default,default,'mike/5/3.zip'),
+  (4,default,default,default,'mike/5/4.zip'),
+  (5,'mike, thank you',default,'bob/1/1.jpg',default),
+  (5,default,default,'bob/1/2.jpg',default),
+  (5,default,default,'bob/1/3.jpg',default),
+  (5,default,default,'bob/1/4.jpg',default),
+  (6,'hello rayan',default,default,default),
+  (7,default,'bob/4/1.mp4',default,default),
+  (8,'hello lera,how are you?',default,default,default),
+  (9,'hello mike,from rayan',default,default,default),
+  (10,'hello bob',default,default,default),
+  (11,'hello adrew',default,default,default),
+  (12,'hello lera',default,default,default),
+  (13,'hello mike, from adrew',default,default,default),
+  (14,'hello bob, from adrew',default,default,default),
+  (15,'hello rayan, from adrew',default,default,default),
+  (16,'hello lera, from adrew',default,default,default),
+  (17,'hello mike, from lera',default,default,default),
+  (18,'hello bob, from lera',default,default,default),
+  (19,'hello rayan, from lera',default,default,default),
+  (20,'hello adrew, from lera',default,default,default);
+```
+
+Результат заполнения таблиц можно увидеть в начале отчета
+
+2\.2\. Команды изменения и удаления:
+
+- Добавить запись в таблицу:
+```sql
+insert into users (login,password) values 
+  ('mike_second',digest('qwerty_second','sha256'));
+```
+
+- Изменить запись в таблице:
+```sql
+update users
+  set login='mike_third'
+where id_user=1;
+```
+
+- Удалить запись из таблицы:
+```sql
+delete from users
+where id_user=1;
+```
+
+
+## Задание 3.
+
+3\.1\. Напишем запрос для вывода из таблицы Users\_information имени и возраста, тех людей кому 20 лет:
+
+```sql
+select name, age 
+from users_information
+where age=20;
+```
+
+Выполнение запроса:<br/>
+![9.png](images/9.png)
+
+3\.2\. Напишем запрос для вывода из таблицы Data\_messages текстовых сообщений, которые отправлял пользователь mike:
+
+```sql
+select text_message
+from data_messages
+where (
+  (select login 
+  from users
+  where id_user=
+    (select id_sender
+    from messages
+    where messages.id_message=data_messages.id_message)
+  )='mike'
+  and (text_message!='none')
+);
+```
+
+Выполнение запроса:<br/>
+![10.png](images/10.png)
+
+
+3\.3\. Напишем запрос для вывода из таблицы Users логинов пользователей, кто отправлял сообщения 11 января 2025 года:
+
+```sql
+select login
+from users
+where '2025-01-11' IN (
+  select date_message
+  from messages
+  where id_sender=users.id_user
+);
+```
+
+Выполнение запроса:<br/>
+![11.png](images/11.png)
+
+
+3\.2\. Напишем запрос для вывода из таблицы Users логинов пользователей, кто отправлял сообщения утро - с 8 утра до 10 и при этом пользовался темной темой, то есть узнаем тех пользователей, у кого темная тема включена всегда, не только ночью:
+
+```sql
+select login
+from users
+where(
+  (
+    (
+    select count(time_message)
+    from messages
+    where (id_sender=users.id_user) and (time_message between '08:00:00' and '10:00:00') 
+    )>0
+  )
+  and
+  (
+    (
+    select color_scheme
+    from users_information
+    where users_information.id_user=users.id_user
+    )='dark'
+  )
+
+);
+```
+
+Выполнение запроса:<br/>
+![12.png](images/12.png)
+
+
